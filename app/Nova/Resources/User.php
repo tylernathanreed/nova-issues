@@ -2,11 +2,13 @@
 
 namespace App\Nova\Resources;
 
+use App\Enums\UserStatus;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules;
 use Laravel\Nova\Fields\Gravatar;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Password;
+use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
@@ -61,6 +63,11 @@ class User extends Resource
                 ->onlyOnForms()
                 ->creationRules('required', Rules\Password::defaults())
                 ->updateRules('nullable', Rules\Password::defaults()),
+
+            Select::make('Status')
+                ->options(collect(UserStatus::cases())->mapWithKeys(fn ($v) => [$v->value => $v->name]))
+                ->displayUsingLabels()
+                ->filterable(),
         ];
     }
 
